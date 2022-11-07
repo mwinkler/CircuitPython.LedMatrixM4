@@ -1,20 +1,19 @@
 import board
 import busio
-import time
-from adafruit_ht16k33 import matrix
-from help.ht16k33 import matrix_helper
+import adafruit_ssd1306
 
-with busio.I2C(board.SCL, board.SDA) as i2c:
+i2c = busio.I2C(board.SCL, board.SDA)
 
-    matrix = matrix.Matrix8x8(i2c, brightness=0.1)
+display = adafruit_ssd1306.SSD1306_I2C(128, 32, i2c)
 
-    mt_helper = matrix_helper(matrix)
+print("Text test")
+display.fill(0)
+char_width = 6
+char_height = 8
+chars_per_line = display.width // 6
+for i in range(255):
+    x = char_width * (i % chars_per_line)
+    y = char_height * (i // chars_per_line)
+    display.text(chr(i), x, y, 1)
+display.show()
 
-    matrix.fill(0)
-
-    for y in range(8):
-        for x in range(8):
-            mt_helper.pixel(x, y, 1)
-            #matrix[x, y] = 1
-            #matrix.show()
-            time.sleep(0.1)
